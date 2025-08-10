@@ -6,13 +6,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-public class GuessTheNumberPanel extends JPanel {
+public class GuessTheNumberPanel extends JPanel implements FrameControl {
    private String name = "Color Clash";
-   String colorNames[]={"Blue","Green","Red","Yellow","Black"};
+   @Override
+   public String getName() {
+      return name;
+   }
+   @Override
+   public boolean shouldLockFrameSize() {
+      return true;
+   }
+   @Override
+   public Dimension frameNewSize() {
+      return new Dimension(800, 500);
+   }
+
+
+    String colorNames[]={"Blue","Green","Red","Yellow","Black"};
    Color  colors[]={Color.RED,Color.BLACK,Color.BLUE,Color.green,Color.YELLOW};
    int nameIndex;
    int colorIndex;
-   JLabel menuTitle = new JLabel("");
+   JLabel colorTitle = new JLabel("");
    Random rand=new Random();
 
    JButton playAgainBtn = new JButton("Play Again");
@@ -24,12 +38,8 @@ public class GuessTheNumberPanel extends JPanel {
    JButton greenButton = new JButton("Green");
    JButton blackButton = new JButton("Black");
 
-   @Override
-   public String getName() {
-      return name;
-   }
 
-   public GuessTheNumberPanel() throws HeadlessException {
+   public GuessTheNumberPanel(JFrame frame) throws HeadlessException {
       setBackground(Color.WHITE);
       setLayout(new BorderLayout());
 
@@ -56,17 +66,7 @@ public class GuessTheNumberPanel extends JPanel {
       playAgainBtn.setForeground(Color.WHITE);
       playAgainBtn.setEnabled(false);
 
-      backBtn.addActionListener(e -> {
-         Container parent = this.getParent();
-         CardLayout cardLayout = (CardLayout) parent.getLayout();
-         cardLayout.show(parent,"Menu");
-         gameContineu();
-      });
-      backBtn.setContentAreaFilled(false);
-      backBtn.setBorderPainted(false);
-      backBtn.setFocusPainted(false);
-      backBtn.setOpaque(false);
-      backBtn.setForeground(Color.black);
+      backBtn = addBackButton(frame,this);
 
       JPanel Options = new JPanel();
       Options.setOpaque(false);
@@ -77,22 +77,23 @@ public class GuessTheNumberPanel extends JPanel {
       gameContineu();
    }
 
-   public void gameContineu(){
+    @Override
+    public void gameContineu() {
+        resetGame(true);
+        this.setBackground(Color.WHITE);
+        backBtn.setForeground(Color.black);
+        playAgainBtn.setEnabled(false);
 
-      resetGame(true);
-      this.setBackground(Color.WHITE);
-      backBtn.setForeground(Color.black);
-      playAgainBtn.setEnabled(false);
+        nameIndex= rand.nextInt(5);
+        colorIndex= rand.nextInt(5);
 
-      nameIndex= rand.nextInt(5);
-      colorIndex= rand.nextInt(5);
+        colorTitle.setText(colorNames[nameIndex]);
+        colorTitle.setForeground(colors[colorIndex]);
+        colorTitle.setFont(new Font("Arial", Font.BOLD, 32));
+        colorTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        this.add(colorTitle, BorderLayout.CENTER);
 
-      menuTitle.setText(colorNames[nameIndex]);
-      menuTitle.setForeground(colors[colorIndex]);
-      menuTitle.setFont(new Font("Arial", Font.BOLD, 32));
-      menuTitle.setHorizontalAlignment(SwingConstants.CENTER);
-      this.add(menuTitle, BorderLayout.CENTER);
-   }
+    }
    public void resetGame(boolean buttonState){
       redButton.setEnabled(buttonState);
       yellowButton.setEnabled(buttonState);
@@ -112,8 +113,8 @@ public class GuessTheNumberPanel extends JPanel {
          if (color.equals(colors[colorIndex]))
             gameContineu();
          else{
-            menuTitle.setText("Game Over !");
-            menuTitle.setForeground(Color.WHITE);
+            colorTitle.setText("Game Over !");
+            colorTitle.setForeground(Color.WHITE);
             playAgainBtn.setEnabled(true);
             backBtn.setForeground(Color.WHITE);
 

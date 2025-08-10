@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import Games.*;
-
+import Games.CrossTheStreetPannel;
 
 
 public class Main {
@@ -19,9 +19,10 @@ public class Main {
         public MainFrame() throws HeadlessException {
             Toolkit toolkit = Toolkit.getDefaultToolkit(); //
             setSize(toolkit.getScreenSize().width/2,toolkit.getScreenSize().height/2);
+       //     setResizable(true);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //بسته شدن با دکمه خروج
             setLocationByPlatform(true); // لوکیشن انتخابی سیستم
-            setTitle("Desktop Games"); // عنوان پنجره
+            setTitle("Simple Desktop Games"); // عنوان پنجره
             Image im = new ImageIcon("D:\\JAVA\\icons\\myIcon.png").getImage(); // ساخت آیکون (خودت بکش)
             setIconImage(im); // تنظیم آیکون پنجره
 
@@ -42,10 +43,12 @@ public class Main {
     }
 
 
-    static class MenuPanel extends JPanel {
+    static class MenuPanel extends JPanel{
+        
         public MenuPanel(JPanel main , CardLayout cardLayout, JFrame frame) throws HeadlessException {
             setLayout(new BorderLayout());
             setBackground(new Color(0,102,51));
+
 
             //عنوان منو
             JLabel menuTitle = new JLabel("Games Menu");
@@ -66,7 +69,8 @@ public class Main {
             centerWraper.setOpaque(false);
 
             // اضافه کردن دکمه های بازی ها
-            addGameButton("1. Color Clash",new GuessTheNumberPanel(),buttonPanel,main,cardLayout,frame);
+            addGameButton("1. Color Clash",new GuessTheNumberPanel(frame),buttonPanel,main,cardLayout,frame);
+            addGameButton("2. Cross The Street", new CrossTheStreetPannel(frame),buttonPanel,main,cardLayout,frame );
 
 
             centerWraper.add(buttonPanel);
@@ -88,6 +92,10 @@ public class Main {
            gameButton.addActionListener(e -> {
                cardLayout.show(menu,gameName);
                frame.setTitle(gamePanel.getName());
+               if(gamePanel instanceof FrameControl){
+                   frame.setResizable(((FrameControl) gamePanel).shouldLockFrameSize());
+                   frame.setSize(((FrameControl) gamePanel).frameNewSize());
+               }
            }); // با فعال شدن دکمه ،از بین پنل های منو ، پنل بازی نامبرده نمایش داده بشود
 
             // پنل بازی
@@ -95,7 +103,9 @@ public class Main {
             //اضافه کردن دکمه به پنل دکمه ها
             buttonPanel.add(Box.createHorizontalStrut(15));
             buttonPanel.add(gameButton);
+
         }
+
     }
 
 }
