@@ -25,6 +25,7 @@ public class Frog extends  Thread{
         frog.setRunning(true);
         frog.setLocation(startX, startY);
         parent.add(frog);
+
     }
     public void setDirection(String direction) {
         this.direction = direction;

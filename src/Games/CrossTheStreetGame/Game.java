@@ -10,18 +10,26 @@ public class Game extends Thread{
     private Frog frog;
     private ArrayList<CrossTheStreetPannel.SquareComponent> carsList;
     private JPanel gameOverPanel;
-    private JPanel panel;
+    private CrossTheStreetPannel panel;
 
     private  int x =175;
     private  int y= 200;
-    JLabel message = new JLabel("Game Over !");
+    private JLabel message = new JLabel("Game Over !");
 
+    public JLabel getMessage() {
+        return message;
+    }
 
-    public Game(Frog f , ArrayList<CrossTheStreetPannel.SquareComponent> array , JPanel p){
+    public Game(Frog f , ArrayList<CrossTheStreetPannel.SquareComponent> array , CrossTheStreetPannel p ){
         frog = f;
         carsList = new ArrayList<>(array);
         panel = p;
     }
+
+    public Frog getFrog() {
+        return frog;
+    }
+
     private void gameOverSet(){
         for (CrossTheStreetPannel.SquareComponent c : carsList) {
             c.setColor(Color.DARK_GRAY);
@@ -38,22 +46,8 @@ public class Game extends Thread{
         panel.repaint();
         panel.setComponentZOrder(message,0);
         message.setVisible(true);
-    }
-
-    public void reset(){
-        panel.setBackground(Color.WHITE);
-        gameOverPanel.setVisible(false);
-        frog.getFrogComponent().setLocation(frog.getStarX(),frog.getStartY());
-        frog.getFrogComponent().setColor(new Color(0,65,0));
-        frog.getFrogComponent().repaint();
-        frog.getFrogComponent().setRunning(true);
-        /*
-        for (MakeCar c : cars) {
-            c.getCarComponent().setColor(c.getSpeedEnum().getColor());
-            c.getCarComponent().setRunning(true);
-        }
-         */
-
+        panel.getPlayAgainBtn().setForeground(Color.BLACK);
+        panel.getPlayAgainBtn().setEnabled(true);
     }
 
     @Override

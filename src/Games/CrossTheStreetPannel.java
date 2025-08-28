@@ -10,29 +10,25 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-public class CrossTheStreetPannel extends JPanel implements FrameControl {
+public class CrossTheStreetPannel extends GamePanel implements FrameControl {
     private String name = "Cross The Street";
     JFrame frame;
-    Frog frog = new Frog(this);
+    Frog frog = new Frog(this);;
     ArrayList<SquareComponent> carsComponentList = new ArrayList<>();
+    Game game  = new Game(frog,carsComponentList,this); ;
 
-    // TODO: برای ریست بازی یا تعویض مرحله
-    //  کلاس‌های Thread ( Frog و MakeCar) بعد از توقف قابل اجرا مجدد نیستن
-    //  بنابراین باید حذف و دوباره ساخته بشن
-    //  و همچنین ساخت پنل جدید برای هر مرحله
+    private JButton playAgainBtn ;
+    private JButton backBtn ;
+
+    public JButton getPlayAgainBtn() {
+        return playAgainBtn;
+    }
+
+    // TODO:  ساخت مرحله
     @Override
     public void gameContineu() {
 
-    }
-
-    public CrossTheStreetPannel(JFrame f) throws HeadlessException {
-        setLayout(null);
-        setBackground(Color.white);
-        this.frame =f;
-
-        JButton backBtn = addBackButton(frame,this);
-        backBtn.setBounds(0,0,80,30);
-        this.add(backBtn);
+        resetGame(frame,this);
 
         // todo :اضافه کرئن سیستم مرحله بندی بازی با بارگذاری از فایل ها و یا کلاس
 
@@ -78,7 +74,7 @@ public class CrossTheStreetPannel extends JPanel implements FrameControl {
                 }
             }
         });
-        frog.start();
+
 
         setFocusable(true);
         addHierarchyListener( e -> {
@@ -87,8 +83,58 @@ public class CrossTheStreetPannel extends JPanel implements FrameControl {
             }
         });
 
-        Game game=new Game(frog, carsComponentList,this);
+        game = new Game(frog,carsComponentList,this);
         game.start();
+    }
+
+    private void resetGame(JFrame f, JPanel p) {
+
+        playAgainBtn.setForeground(Color.WHITE);
+        playAgainBtn.setEnabled(false);
+
+        for ( Component c : carsComponentList){
+            p.remove(c);
+        }
+        carsComponentList.clear();
+
+        frog.getFrogComponent().setRunning(false);
+        p.remove(frog.getFrogComponent());
+
+        game.getMessage().setVisible(false);
+
+        game.getFrog().getFrogComponent().setRunning(false);
+        game=null;
+
+        p.setBackground(Color.WHITE);
+
+        frog = new Frog(this);
+        frog.start();
+        p.add(frog.getFrogComponent());
+
+        game = new Game(frog , carsComponentList, this);
+        game.start();
+
+
+    }
+
+
+    public CrossTheStreetPannel(JFrame f) throws HeadlessException {
+
+        setLayout(null);
+        setBackground(Color.white);
+        this.frame =f;
+
+        playAgainBtn = newPlayAgainBtn(frame , this);
+        backBtn =  newBackBtn(frame,this);
+        JPanel options = new JPanel();
+        options.setBackground(Color.blue);
+        options.setSize(200,50);
+        options.setOpaque(false);
+        options.add(backBtn);
+        options.add(playAgainBtn);
+        this.add(options,BorderLayout.NORTH);
+
+        gameContineu();
 
     }
 

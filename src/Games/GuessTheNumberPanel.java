@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-public class GuessTheNumberPanel extends JPanel implements FrameControl {
+public class GuessTheNumberPanel extends GamePanel implements FrameControl {
    private String name = "Color Clash";
    @Override
    public String getName() {
@@ -22,21 +22,21 @@ public class GuessTheNumberPanel extends JPanel implements FrameControl {
    }
 
 
-    String colorNames[]={"Blue","Green","Red","Yellow","Black"};
-   Color  colors[]={Color.RED,Color.BLACK,Color.BLUE,Color.green,Color.YELLOW};
+   private String colorNames[]={"Blue","Green","Red","Yellow","Black"};
+   private Color  colors[]={Color.RED,Color.BLACK,Color.BLUE,Color.green,Color.YELLOW};
    int nameIndex;
    int colorIndex;
-   JLabel colorTitle = new JLabel("");
-   Random rand=new Random();
+   private JLabel colorTitle = new JLabel("");
+   private Random rand=new Random();
 
-   JButton playAgainBtn = new JButton("Play Again");
-   JButton backBtn = new JButton("< Back");
+   private JButton playAgainBtn = new JButton("Play Again");
+   private JButton backBtn = new JButton("< Back");
 
-   JButton redButton = new JButton("Red");
-   JButton yellowButton = new JButton("Yellow");
-   JButton blueButton = new JButton("Blue");
-   JButton greenButton = new JButton("Green");
-   JButton blackButton = new JButton("Black");
+   private JButton redButton = new JButton("Red");
+   private JButton yellowButton = new JButton("Yellow");
+   private JButton blueButton = new JButton("Blue");
+   private JButton greenButton = new JButton("Green");
+   private JButton blackButton = new JButton("Black");
 
 
    public GuessTheNumberPanel(JFrame frame) throws HeadlessException {
@@ -57,17 +57,8 @@ public class GuessTheNumberPanel extends JPanel implements FrameControl {
       Buttons.add(blackButton);
       this.add(Buttons,BorderLayout.SOUTH);
 
-      playAgainBtn.addActionListener(e -> {
-         gameContineu();});
-      playAgainBtn.setContentAreaFilled(false);
-      playAgainBtn.setBorderPainted(false);
-      playAgainBtn.setFocusPainted(false);
-      playAgainBtn.setOpaque(false);
-      playAgainBtn.setForeground(Color.WHITE);
-      playAgainBtn.setEnabled(false);
-
-      backBtn = addBackButton(frame,this);
-
+      playAgainBtn = newPlayAgainBtn(frame , this);
+      backBtn =  newBackBtn(frame,this);
       JPanel Options = new JPanel();
       Options.setOpaque(false);
       Options.add(backBtn);
